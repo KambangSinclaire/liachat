@@ -5,7 +5,7 @@ $(document).ready(() => {
     const loginBtn = document.querySelector('.login');
     const register = document.querySelector('.register');
 
-    const url = 'http://localhost:9000/liachat.api/user/login';
+    const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
 
 
 
