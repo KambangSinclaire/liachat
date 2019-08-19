@@ -59,6 +59,7 @@ $(document).ready(() => {
                                 alert.classList.add('alert-danger');
                                 alert.classList.remove('d-none');
                             } else {
+                                $.post(setAuthUrl, { userId: user.id, isLoggedIn: true });
                                 const uid = JSON.stringify(user.id);
                                 localStorage.setItem('authUser', uid);
                                 window.location = "./src/views/index.chat.html"
@@ -67,6 +68,7 @@ $(document).ready(() => {
                     });
                 } else {
                     let link = document.createElement('a');
+                    localStorage.setItem('authUser', userid);
                     link.href = './src/views/index.chat.html';
                     link.classList.add('alert-link');
                     link.innerHTML = `<strong>Go back to Chatroom</strong>`

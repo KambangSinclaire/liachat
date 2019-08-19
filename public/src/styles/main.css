@@ -113,6 +113,10 @@ html {
 
 }
 
+.userIcon {
+    color: khaki;
+}
+
 .user_img_msg {
     height: 40px;
     width: 40px;
@@ -149,11 +153,11 @@ html {
 .user_info {
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 15px;
+    margin-left: 8px;
 }
 
 .user_info span {
-    font-size: 20px;
+    /* font-size: 20px; */
     color: white;
 }
 
@@ -271,9 +275,22 @@ html {
         height: auto !important;
     }
 
-    /* .card {
-        height: 500px;
-        border-radius: 15px !important;
-        background-color: rgba(0, 0, 0, 0.4) !important;
-    } */
+    .fa-video {
+        display: none;
+    }
+
+    .fa-phone {
+        display: none;
+    }
+}
+
+@media(max-width: 76px) {
+
+    .fa-video {
+        display: none;
+    }
+
+    .fa-phone {
+        display: none;
+    }
 }

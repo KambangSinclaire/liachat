@@ -1,7 +1,9 @@
 $(document).ready(function () {
 
+    const alertMessage = document.querySelector('.alert');
     const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
     const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
+    const usersUrl = 'http://localhost:9000/liachat.api/users';
 
 
     /**
@@ -16,21 +18,62 @@ $(document).ready(function () {
     if (userid != null) {
         $.post(checkLogInUrl, { userId: userid }, (user, error) => {
             if (user.msg) {
-                alert('logged in as ' + user.user.username);
-
+                // alertMessage.textContent = `Welcome Dear ${user.user.username}, enjoy using LIA`;
+                // alertMessage.classList.add('alert-primary');
+                // alertMessage.classList.remove('d-none');
                 loggedInUser.push(user.user);
-                /**
-            * Getting DOM Elements
-            */
-                // const sentMessageTime = document.querySelector('.sentMessageTime');
-                // const receivedMessage = document.querySelector('.receivedMessage');
-                // const receivedMessageTime = document.querySelector('.receivedMessageTime');
-                // const userStatus = document.querySelector('.userStatus');
-                // const username = document.querySelector('.username');
-                // const groupName = document.querySelector('.groupName');
-                // const messageTime = document.querySelector('.messageTime');
-                // const profilePicture = document.querySelector('.profilePicture');
-                const lastSeenAt = document.querySelector('.lastSeenAt');
+
+
+
+
+                //These counters are...
+                let counter = 0;
+                let counter2 = 0;
+
+
+
+                //Socket.io client
+                const socket = io()
+
+                $('#action_menu_btn').click(function () {
+                    $('.action_menu').toggle();
+                });
+
+
+                const allUsers = document.querySelector('.contacts');
+
+                $.get(usersUrl, (users, error) => {
+                    users.forEach((user) => {
+                        if (user.isLoggedIn) {
+                            const listUser = createLoggedInUsers(user.username);
+                            allUsers.appendChild(listUser);
+
+
+                            let lastSeenAt = document.querySelector('.lastSeenAt');
+                            socket.on('typing', (data) => {
+                                const username = document.querySelector('.username');
+                                username.innerHTML = loggedInUser[0].username;
+                                lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
+                            });
+                            // lastSeenAt.innerHTML = 'Online';
+                        }
+                    });
+                });
+
+                //Listen for events
+                // const lastSeenAt2 = document.querySelector('.lastSeenAt');
+                socket.on('message', (data) => {
+
+                    const messageContainer = createReceivedMessageContainer(counter2);
+                    msg_card_body.appendChild(messageContainer);
+                    const receivedMessage = document.querySelector('.receivedMessage' + counter2);
+                    let sender = document.createElement('p');
+                    sender.innerHTML = `<em class="text-secondary text-italic">@${data.sender}</em>`
+                    receivedMessage.textContent += `${data.message}`;
+                    receivedMessage.appendChild(sender);
+                    counter2++;
+                });
+
                 const send_btn = document.querySelector('.send_btn');
                 const textMessage = document.querySelector('.textMessage');
                 const msg_card_body = document.querySelector('.msg_card_body');
@@ -40,9 +83,14 @@ $(document).ready(function () {
 
 
 
-                /**
-                 * User Logout
-                 */
+
+
+
+
+
+
+                // User Logout
+
                 logOut.addEventListener('click', (event) => {
                     console.log(loggedInUser[0].id);
 
@@ -55,22 +103,8 @@ $(document).ready(function () {
                     })
 
                 });
+                // End User Logout
 
-                //These counters are...
-                let counter = 0;
-                let counter2 = 0;
-
-                //Socket.io client
-                const socket = io()
-
-
-                $('#action_menu_btn').click(function () {
-                    $('.action_menu').toggle();
-                });
-
-                /**
-                Get user Logged in
-                 */
 
 
 
@@ -98,25 +132,12 @@ $(document).ready(function () {
 
 
 
-
-                textMessage.addEventListener('keypress', function () {
+                textMessage.addEventListener('keypress', () => {
 
                     socket.emit('typing', loggedInUser[0].username);
                 });
 
-                //Listen for events
-                socket.on('message', (data) => {
-                    lastSeenAt.innerHTML = "";
-                    const messageContainer = createReceivedMessageContainer(counter2);
-                    msg_card_body.appendChild(messageContainer);
-                    const receivedMessage = document.querySelector('.receivedMessage' + counter2);
-                    receivedMessage.innerHTML += `${data.message}`;
-                    counter2++;
-                });
 
-                socket.on('typing', (data) => {
-                    lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
-                });
 
             } else {
                 window.location = '../../index.html';
@@ -188,7 +209,6 @@ function createReceivedMessageContainer(count) {
     let receivedImageDiv = document.createElement('div');
     let receivedMessageParagraph = document.createElement('span');
     let receivedMessageTimeSpan = document.createElement('span');
-    let breakTag = document.createElement('br');
     let receivedProfilePicture = document.createElement('img');
 
     /**
@@ -220,5 +240,67 @@ function createReceivedMessageContainer(count) {
     receivedMessageParentContainer.appendChild(receivedMessageContainer);
 
     return receivedMessageParentContainer;
+
+}
+
+
+
+function createLoggedInUsers(nameOfUser) {
+
+    /**
+    * Dynamically creating message fields
+    */
+    let ParentContainer = document.createElement('li');
+    let subContainer_alignment = document.createElement('div');
+    let userProfilePicture = document.createElement('i');
+    let userProfilePictureContainerContainer = document.createElement('div');
+    // let userOnlineIcon = document.createElement('span');
+    let userInfo = document.createElement('div');
+    let usernameSpanTag = document.createElement('span');
+    let lastSeenStatus = document.createElement('span');
+
+    /**
+     * Dynamically adding styles via classes
+     */
+
+    subContainer_alignment.classList.add('d-flex');
+    subContainer_alignment.classList.add('bd-highlight');
+
+    userProfilePictureContainerContainer.classList.add('img_cont');
+
+    userProfilePicture.classList.add('fas');
+    userProfilePicture.classList.add('fa-user-circle');
+    userProfilePicture.classList.add('fa-3x');
+    userProfilePicture.classList.add('userIcon');
+
+
+    userInfo.classList.add('user_info');
+    usernameSpanTag.classList.add('username');
+    usernameSpanTag.classList.add('text-capitalize');
+    lastSeenStatus.classList.add('lastSeenAt');
+
+    /**
+    * Dynamically adding content 
+    */
+    usernameSpanTag.innerHTML = nameOfUser;
+
+
+    /**
+     * Dynamically appending child elements
+     */
+    userInfo.appendChild(usernameSpanTag);
+    userInfo.appendChild(lastSeenStatus);
+
+    userProfilePictureContainerContainer.appendChild(userProfilePicture);
+    // userProfilePictureContainerContainer.appendChild(userOnlineIcon);
+
+
+    subContainer_alignment.appendChild(userProfilePictureContainerContainer);
+    subContainer_alignment.appendChild(userInfo);
+
+    ParentContainer.appendChild(subContainer_alignment);
+
+    return ParentContainer;
+
 
 }

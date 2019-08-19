@@ -6,6 +6,16 @@ const util = require('util');
 const fs = require('fs-extra');
 
 
+
+
+
+// Api route for getting all Logged in Users
+UserRouter.get('/users', (req, res) => {
+    userModel.findAll()
+        .then(users => res.json(users))
+        .catch(error => console.log(error))
+});
+
 // Api route for Uthenticating a User
 UserRouter.post('/user/login', (req, res) => {
     authenticateUser = {
