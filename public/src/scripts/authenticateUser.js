@@ -4,6 +4,7 @@ $(document).ready(() => {
     const password = document.querySelector('.password');
     const loginBtn = document.querySelector('.login');
     const register = document.querySelector('.register');
+    const alert = document.querySelector('.alert');
 
     const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
 
@@ -37,11 +38,14 @@ $(document).ready(() => {
                     isLoggedIn: true
                 }
 
-                $.post(url, user, (error, user) => {
-                    alert('Success oo');
-                    console.log(user);
-                    console.log(error);
-                    window.location = "./src/views/main.html"
+                $.post(url, user, (statusResponse, user) => {
+                    if (statusResponse === "success") {
+                        localStorage.setItem('LoggedUser', user);
+                        window.location = "./src/views/index.chat.html"
+                    } else {
+                        alert.innerHTML = "Login Error";
+                        alert.classList.add('alert-danger');
+                    }
                 });
 
             }

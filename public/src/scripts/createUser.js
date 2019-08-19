@@ -6,6 +6,7 @@ $(document).ready(() => {
     const password = document.querySelector('.password');
     const cpassword = document.querySelector('.cpassword');
     const phone = document.querySelector('.phone');
+    const alert = document.querySelector('.alert');
     // const profilePicture = document.querySelector('.profilePicture');
     const registerBtn = document.querySelector('.register');
 
@@ -58,10 +59,13 @@ $(document).ready(() => {
                                         phone: phone.value
                                     }
                                     $.post(url, NewUser, (error, user) => {
-                                        alert('Success oo');
-                                        window.location = '../../index.html';
-                                        console.log("Thanks");
-                                        console.log(user);
+                                        if (statusResponse === "success") {
+                                            localStorage.setItem('LoggedUser', user);
+                                            window.location = "./src/views/index.chat.html"
+                                        } else {
+                                            alert.innerHTML = 'Error registering user'
+                                            alert.classList.add('alert-danger');
+                                        }
                                     });
 
 
