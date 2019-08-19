@@ -58,7 +58,7 @@ $(document).ready(() => {
                                         password: password.value,
                                         phone: phone.value
                                     }
-                                    $.post(url, NewUser, (error, user) => {
+                                    $.post(url, NewUser, (user, statusResponse) => {
                                         if (statusResponse == "success") {
                                             localStorage.setItem('LoggedUser', user);
                                             window.location = "./src/views/index.chat.html"
