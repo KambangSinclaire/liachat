@@ -39,7 +39,7 @@ $(document).ready(() => {
                 }
 
                 $.post(url, user, (user, statusResponse) => {
-                    if (statusResponse == "success") {
+                    if (user.username == username.value) {
                         localStorage.setItem('LoggedUser', user);
                         window.location = "./src/views/index.chat.html"
                     } else {
