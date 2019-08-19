@@ -10,7 +10,7 @@ $(document).ready(() => {
     // const profilePicture = document.querySelector('.profilePicture');
     const registerBtn = document.querySelector('.register');
 
-    const url = 'http://localhost:9000/liachat.api/user/registerUser';
+    const url = 'https://liachat.herokuapp.com/liachat.api/user/registerUser';
 
     login.addEventListener('click', (event) => {
         event.preventDefault();

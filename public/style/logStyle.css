@@ -1,13 +1,26 @@
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
 @import url(https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.3/css/mdb.min.css);
 
-/* .bg-login {
-    background: url("../assets/LIACHAT.png");
+@import url('https://fonts.googleapis.com/css?family=Lobster&display=swap');
+
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+        url("../assets/nginyateam.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-} */
+    height: 100vh;
+}
+
+.jumbotron {
+    font-family: 'Lobster',
+        cursive;
+}
+
+.btn-raised {
+    font-family: 'Courier New', Courier, monospace
+}
 
 .darken-grey-text {
     color: #2E2E2E;

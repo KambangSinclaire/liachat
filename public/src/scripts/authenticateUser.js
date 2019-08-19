@@ -2,7 +2,7 @@ $(document).ready(() => {
 
     // const userid = JSON.parse(localStorage.getItem("authUser"));
 
-    // const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
+    // const checkLogInUrl = 'https://liachat.herokuapp.com/liachat.api/user/authenticate';
 
 
     const username = document.querySelector('.username');
@@ -11,8 +11,8 @@ $(document).ready(() => {
     const register = document.querySelector('.register');
     const alert = document.querySelector('.alert');
 
-    const url = 'http://localhost:9000/liachat.api/user/login';
-    const setAuthUrl = 'http://localhost:9000/liachat.api/user/setAuth';
+    const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
+    const setAuthUrl = 'https://liachat.herokuapp.com/liachat.api/user/setAuth';
 
 
 
@@ -47,7 +47,6 @@ $(document).ready(() => {
 
                 if (userid === null) {
                     $.post(url, user, (user, statusResponse) => {
-                        console.log(user);
 
                         if (user === null) {
                             alert.innerHTML = "Login Error. Invalid username";

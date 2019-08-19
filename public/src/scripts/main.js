@@ -1,9 +1,9 @@
 $(document).ready(function () {
 
     const alertMessage = document.querySelector('.alert');
-    const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
-    const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
-    const usersUrl = 'http://localhost:9000/liachat.api/users';
+    const checkLogInUrl = 'https://liachat.herokuapp.com/liachat.api/user/authenticate';
+    const logOutUrl = 'https://liachat.herokuapp.com/liachat.api/user/logOut';
+    const usersUrl = 'https://liachat.herokuapp.com/liachat.api/users';
 
 
     /**
