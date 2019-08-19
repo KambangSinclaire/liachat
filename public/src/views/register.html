@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>User Login</title>
+
+    <!-- Material Design for Bootstrap fonts and icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+
+    <!-- Material Design for Bootstrap CSS -->
+    <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+        integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <link rel="stylesheet" href="../../style/logStyle.css">
+</head>
+
+<body class="bg-register">
+
+    <main>
+        <!--MDB Forms-->
+        <div class="container mt-4 form2">
+
+            <div class="text-center darken-grey-text mb-4 text-capitalize">
+                <h1 class="font-bold mt-4 mb-3 h5">liachat. fast and easy</h1>
+                <button class="btn btn-danger btn-raised btn-md login">Login<i class="fa fa-user pl-2"></i></button>
+            </div>
+
+            <!-- Grid row -->
+            <div class="mx-auto">
+                <!-- Grid column -->
+                <div class="mb-4">
+                    <div class="card indigo form-white">
+                        <form action="/liachat.api/user/registerUser" method="post" enctype="multipart/form-data">
+                            <div class="card-body">
+                                <h3 class="text-center white-text py-3"><i class="fa fa-user"></i> User Registeration
+                                </h3>
+                                <!--Body-->
+                                <div class="md-form">
+                                    <i class="fa fa-user prefix white-text"></i>
+                                    <input type="text" id="defaultForm-email1" name="username"
+                                        class="form-control username">
+                                    <label for="defaultForm-email1">Username</label>
+                                </div>
+
+                                <div class="md-form">
+                                    <i class="fa fa-envelope prefix white-text"></i>
+                                    <input type="email" id="defaultForm-email2" name="email" class="form-control email">
+                                    <label for="defaultForm-email2">Email</label>
+                                </div>
+
+                                <div class="md-form">
+                                    <i class="fa fas fa-phone prefix white-text"></i>
+                                    <input type="tel" id="defaultForm-pass1" name="phone" class="form-control phone">
+                                    <label for="defaultForm-pass1">Phone</label>
+                                </div>
+
+                                <div class="md-form">
+                                    <i class="fa fa-lock prefix white-text"></i>
+                                    <input type="password" id="defaultForm-pass2" name="password"
+                                        class="form-control password">
+                                    <label for="defaultForm-pass2">Password</label>
+                                </div>
+
+                                <div class="md-form">
+                                    <i class="fa fa-lock prefix white-text"></i>
+                                    <input type="password" id="defaultForm-pass3" name="cpassword"
+                                        class="form-control cpassword">
+                                    <label for="defaultForm-pass3">Confirm Password</label>
+                                </div>
+
+                                <!-- <div class="md-form">
+                                    <i class="fa fas fa-camera prefix white-text"></i>
+                                    <input type="file" accept="image/*" name="profilePicture" id="defaultForm-pass1"
+                                        class="form-control profilePicture">
+                                    <label for="defaultForm-pass1">Profile Picture</label>
+                                </div> -->
+
+                                <div class="text-center">
+                                    <button type="submit"
+                                        class="btn btn-outline-success waves-effect waves-light register">Register</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- Grid column -->
+            </div>
+            <!-- Grid row -->
+        </div>
+
+    </main>
+
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.4.1/js/mdb.min.js">
+    </script>
+
+    <script src="../../jquery/jquery-3.3.1.min.js"></script>
+
+    <script src="../scripts/createUser.js"></script>
+</body>
+
+</html>
