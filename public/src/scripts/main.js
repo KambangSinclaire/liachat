@@ -1,112 +1,135 @@
 $(document).ready(function () {
 
-    /**
-     * Getting DOM Elements
-     */
-    const sentMessageTime = document.querySelector('.sentMessageTime');
-    const receivedMessage = document.querySelector('.receivedMessage');
-    const receivedMessageTime = document.querySelector('.receivedMessageTime');
-    const userStatus = document.querySelector('.userStatus');
-    const username = document.querySelector('.username');
-    const groupName = document.querySelector('.groupName');
-    const messageTime = document.querySelector('.messageTime');
-    const profilePicture = document.querySelector('.profilePicture');
-    const lastSeenAt = document.querySelector('.lastSeenAt');
-    const send_btn = document.querySelector('.send_btn');
-    const textMessage = document.querySelector('.textMessage');
-    const msg_card_body = document.querySelector('.msg_card_body');
-    const sendArrow = document.querySelector('.sendArrow');
-    const logOut = document.querySelector('.logOut');
+    const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
+    const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
+
 
     /**
-     * Get loggedin user
-     */
+         * Get loggedin user
+         */
     const userid = JSON.parse(localStorage.getItem("authUser"));
-    // localStorage.removeItem("loggedUser");
+
     console.log(userid);
 
-    const url = 'http://localhost:9000/liachat.api/user/authenticate';
     let loggedInUser = [];
 
-    $.post(url, { userId: userid }, (user, error) => {
-        if (user != null) {
-            loggedInUser.push(user);
-        } else {
-            alert('query failed');
-        }
-    });
+    if (userid != null) {
+        $.post(checkLogInUrl, { userId: userid }, (user, error) => {
+            if (user.msg) {
+                alert('logged in as ' + user.user.username);
 
-    /**
-     * User Logout
-     */
-    // logOut.addEventListener('click', (event) => {
-    //     event.preventDefault();
-    // });
-
-    //These counters are...
-    let counter = 0;
-    let counter2 = 0;
-
-    //Socket.io client
-    const socket = io()
-
-
-    $('#action_menu_btn').click(function () {
-        $('.action_menu').toggle();
-    });
-
-    /**
-    Get user Logged in
-     */
-
-
-
-    textMessage.addEventListener("keypress", () => {
-        sendArrow.classList.remove('d-none');
-    });
-    send_btn.addEventListener('click', (event) => {
-        event.preventDefault();
-
-        let message = textMessage.value;
-        if (message == "") {
-            alert("message field cannot be empty");
-        } else {
-            socket.emit('message', { message: message, sender: 'Kambang' });
-
-            const messageContainer = createSentMessageContainer(counter);
-            msg_card_body.append(messageContainer);
-            const sentMessage = document.querySelector('.sentMessage' + counter);
-            sentMessage.textContent = message;
-            counter++;
-            textMessage.value = "";
-        }
-
-    });
+                loggedInUser.push(user.user);
+                /**
+            * Getting DOM Elements
+            */
+                // const sentMessageTime = document.querySelector('.sentMessageTime');
+                // const receivedMessage = document.querySelector('.receivedMessage');
+                // const receivedMessageTime = document.querySelector('.receivedMessageTime');
+                // const userStatus = document.querySelector('.userStatus');
+                // const username = document.querySelector('.username');
+                // const groupName = document.querySelector('.groupName');
+                // const messageTime = document.querySelector('.messageTime');
+                // const profilePicture = document.querySelector('.profilePicture');
+                const lastSeenAt = document.querySelector('.lastSeenAt');
+                const send_btn = document.querySelector('.send_btn');
+                const textMessage = document.querySelector('.textMessage');
+                const msg_card_body = document.querySelector('.msg_card_body');
+                const sendArrow = document.querySelector('.sendArrow');
+                const logOut = document.querySelector('.logOut');
 
 
 
 
-    textMessage.addEventListener('keypress', function () {
+                /**
+                 * User Logout
+                 */
+                logOut.addEventListener('click', (event) => {
+                    console.log(loggedInUser[0].id);
 
-        socket.emit('typing', loggedInUser[0].username);
-    });
+                    event.preventDefault();
+                    $.post(logOutUrl, { userId: loggedInUser[0].id, isLoggedIn: false }, (user, error) => {
+                        if (user != null) {
+                            localStorage.removeItem("authUser");
+                            window.location = '../../index.html';
+                        }
+                    })
 
-    //Listen for events
-    socket.on('message', (data) => {
-        lastSeenAt.innerHTML = "";
-        const messageContainer = createReceivedMessageContainer(counter2);
-        msg_card_body.appendChild(messageContainer);
-        const receivedMessage = document.querySelector('.receivedMessage' + counter2);
-        receivedMessage.innerHTML += `${data.message}`;
-        counter2++;
-    });
+                });
 
-    socket.on('typing', (data) => {
-        lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
-    });
+                //These counters are...
+                let counter = 0;
+                let counter2 = 0;
 
+                //Socket.io client
+                const socket = io()
+
+
+                $('#action_menu_btn').click(function () {
+                    $('.action_menu').toggle();
+                });
+
+                /**
+                Get user Logged in
+                 */
+
+
+
+                textMessage.addEventListener("keypress", () => {
+                    sendArrow.classList.remove('d-none');
+                });
+                send_btn.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    let message = textMessage.value;
+                    if (message == "") {
+                        alert("message field cannot be empty");
+                    } else {
+                        socket.emit('message', { message: message, sender: loggedInUser[0].username });
+
+                        const messageContainer = createSentMessageContainer(counter);
+                        msg_card_body.append(messageContainer);
+                        const sentMessage = document.querySelector('.sentMessage' + counter);
+                        sentMessage.textContent = message;
+                        counter++;
+                        textMessage.value = "";
+                    }
+
+                });
+
+
+
+
+                textMessage.addEventListener('keypress', function () {
+
+                    socket.emit('typing', loggedInUser[0].username);
+                });
+
+                //Listen for events
+                socket.on('message', (data) => {
+                    lastSeenAt.innerHTML = "";
+                    const messageContainer = createReceivedMessageContainer(counter2);
+                    msg_card_body.appendChild(messageContainer);
+                    const receivedMessage = document.querySelector('.receivedMessage' + counter2);
+                    receivedMessage.innerHTML += `${data.message}`;
+                    counter2++;
+                });
+
+                socket.on('typing', (data) => {
+                    lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
+                });
+
+            } else {
+                window.location = '../../index.html';
+            }
+        });
+
+    } else {
+        window.location = '../../index.html';
+    }
 
 });
+
+
 
 function createSentMessageContainer(count) {
     /**

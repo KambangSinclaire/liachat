@@ -11,9 +11,34 @@ UserRouter.post('/user/login', (req, res) => {
     authenticateUser = {
         username: req.body.username,
         password: req.body.password,
+        where: { username: req.body.username }
+    }
+    userModel.findOne(authenticateUser)
+        .then(user => res.json(user))
+        .catch(error => console.log(error))
+});
+
+
+// Api route for setting a User authenticated
+UserRouter.post('/user/setAuth', (req, res) => {
+    authenticateUser = {
         isLoggedIn: req.body.isLoggedIn
     }
-    userModel.update(authenticateUser, { returning: true, where: { username: req.body.username } })
+    userModel.update(authenticateUser, { returning: true, where: { id: req.body.userId } })
+        .then(user => res.json(user[1][0]))
+        .catch(error => console.log(error))
+});
+
+
+
+
+// Api route for logging out a User
+UserRouter.post('/user/logOut', (req, res) => {
+    const logOutUser = {
+        userId: req.body.userId,
+        isLoggedIn: req.body.isLoggedIn
+    }
+    userModel.update(logOutUser, { returning: true, where: { id: req.body.userId } })
         .then(user => res.json(user[1][0]))
         .catch(error => console.log(error))
 });
@@ -23,17 +48,18 @@ UserRouter.post('/user/login', (req, res) => {
 UserRouter.post('/user/authenticate', (req, res) => {
     getUser = {
         id: req.body.userId,
-        where: { id: req.body.userId, }
+        where: { id: req.body.userId }
     }
     userModel.findOne(getUser)
         .then(user => {
             if (user.isLoggedIn) {
                 res.json({
                     "error_code": "-1",
-                    "msg": "User already logged"
+                    "msg": "User already logged",
+                    "user": user
                 });
             } else {
-                res.json(user);
+                res.json({ success: false, msg: "Not uthenticated" });
             }
         })
         .catch(error => console.log(error)

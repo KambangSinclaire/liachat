@@ -1,5 +1,10 @@
 $(document).ready(() => {
 
+    // const userid = JSON.parse(localStorage.getItem("authUser"));
+
+    // const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
+
+
     const username = document.querySelector('.username');
     const password = document.querySelector('.password');
     const loginBtn = document.querySelector('.login');
@@ -7,6 +12,7 @@ $(document).ready(() => {
     const alert = document.querySelector('.alert');
 
     const url = 'http://localhost:9000/liachat.api/user/login';
+    const setAuthUrl = 'http://localhost:9000/liachat.api/user/setAuth';
 
 
 
@@ -31,27 +37,32 @@ $(document).ready(() => {
                 password.style.border = '1px solid red';
                 return;
             } else {
+
+                const userid = JSON.parse(localStorage.getItem("authUser"));
                 // Create new user object
                 const user = {
                     username: username.value.toLowerCase(),
                     password: password.value.toLowerCase(),
-                    isLoggedIn: true
-                }
+                };
 
-                const userid = JSON.parse(localStorage.getItem("authUser"));
                 if (userid === null) {
                     $.post(url, user, (user, statusResponse) => {
+                        console.log(user);
 
                         if (user === null) {
-                            alert.innerHTML = "Login Error. Invalid username or password";
+                            alert.innerHTML = "Login Error. Invalid username";
                             alert.classList.add('alert-danger');
                             alert.classList.remove('d-none');
                         } else {
-                            console.log(user);
-
-                            const usernameLog = JSON.stringify(user.id);
-                            localStorage.setItem('authUser', usernameLog);
-                            window.location = "./src/views/index.chat.html"
+                            if (user.password != password.value) {
+                                alert.innerHTML = "Login Error. Invalid password";
+                                alert.classList.add('alert-danger');
+                                alert.classList.remove('d-none');
+                            } else {
+                                const uid = JSON.stringify(user.id);
+                                localStorage.setItem('authUser', uid);
+                                window.location = "./src/views/index.chat.html"
+                            }
                         }
                     });
                 } else {
@@ -69,5 +80,6 @@ $(document).ready(() => {
         }
 
     });
+
 
 });

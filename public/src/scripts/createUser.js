@@ -64,7 +64,6 @@ $(document).ready(() => {
                                             alert.classList.add('alert-danger');
                                             alert.classList.remove('d-none');
                                         } else {
-
                                             window.location = "../../index.html"
                                         }
                                     });
