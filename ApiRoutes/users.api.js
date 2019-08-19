@@ -11,27 +11,26 @@ UserRouter.post('/user/login', (req, res) => {
     authenticateUser = {
         username: req.body.username,
         password: req.body.password,
-        isLoggedIn: req.body.isLoggedIn,
-        where: { username: req.body.username }
+        isLoggedIn: req.body.isLoggedIn
     }
-    userModel.findOne(authenticateUser)
-        .then(user => res.json(user))
+    userModel.update(authenticateUser, { returning: true, where: { username: req.body.username } })
+        .then(user => res.json(user[1][0]))
         .catch(error => console.log(error))
 });
 
 
 // Api route for getting User Details during product purchase
-UserRouter.post('/user/details', (req, res) => {
+UserRouter.post('/user/authenticate', (req, res) => {
     getUser = {
-        email: req.body.email,
-        where: { email: req.body.email, }
+        id: req.body.userId,
+        where: { id: req.body.userId, }
     }
     userModel.findOne(getUser)
         .then(user => {
-            if (user === null) {
+            if (user.isLoggedIn) {
                 res.json({
                     "error_code": "-1",
-                    "msg": "Email Doest Not Exist"
+                    "msg": "User already logged"
                 });
             } else {
                 res.json(user);

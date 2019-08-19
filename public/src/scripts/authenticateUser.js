@@ -6,7 +6,7 @@ $(document).ready(() => {
     const register = document.querySelector('.register');
     const alert = document.querySelector('.alert');
 
-    const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
+    const url = 'http://localhost:9000/liachat.api/user/login';
 
 
 
@@ -33,21 +33,37 @@ $(document).ready(() => {
             } else {
                 // Create new user object
                 const user = {
-                    username: username.value,
-                    password: password.value,
+                    username: username.value.toLowerCase(),
+                    password: password.value.toLowerCase(),
                     isLoggedIn: true
                 }
 
-                $.post(url, user, (user, statusResponse) => {
-                    if (user === null) {
-                        alert.innerHTML = "Login Error";
-                        alert.classList.add('alert-danger');
-                        alert.classList.remove('d-none');
-                    } else {
-                        localStorage.setItem('LoggedUser', user);
-                        window.location = "./src/views/index.chat.html"
-                    }
-                });
+                const userid = JSON.parse(localStorage.getItem("authUser"));
+                if (userid === null) {
+                    $.post(url, user, (user, statusResponse) => {
+
+                        if (user === null) {
+                            alert.innerHTML = "Login Error. Invalid username or password";
+                            alert.classList.add('alert-danger');
+                            alert.classList.remove('d-none');
+                        } else {
+                            console.log(user);
+
+                            const usernameLog = JSON.stringify(user.id);
+                            localStorage.setItem('authUser', usernameLog);
+                            window.location = "./src/views/index.chat.html"
+                        }
+                    });
+                } else {
+                    let link = document.createElement('a');
+                    link.href = './src/views/index.chat.html';
+                    link.classList.add('alert-link');
+                    link.innerHTML = `<strong>Go back to Chatroom</strong>`
+                    alert.textContent = "Already logged in here ";
+                    alert.classList.add('alert-danger');
+                    alert.classList.remove('d-none');
+                    alert.appendChild(link);
+                }
 
             }
         }

@@ -17,6 +17,24 @@ $(document).ready(function () {
     const msg_card_body = document.querySelector('.msg_card_body');
     const sendArrow = document.querySelector('.sendArrow');
 
+    /**
+     * Get loggedin user
+     */
+    const userid = JSON.parse(localStorage.getItem("authUser"));
+    // localStorage.removeItem("loggedUser");
+    console.log(userid);
+
+    const url = 'http://localhost:9000/liachat.api/user/authenticate';
+    let loggedInUser = [];
+
+    $.post(url, { userId: userid }, (user, error) => {
+        if (user != null) {
+            loggedInUser.push(user);
+        } else {
+            alert('query failed');
+        }
+    });
+
     //These counters are...
     let counter = 0;
     let counter2 = 0;
@@ -29,6 +47,9 @@ $(document).ready(function () {
         $('.action_menu').toggle();
     });
 
+    /**
+    Get user Logged in
+     */
 
 
 
@@ -59,7 +80,7 @@ $(document).ready(function () {
 
     textMessage.addEventListener('keypress', function () {
 
-        socket.emit('typing', 'Sinclaire');
+        socket.emit('typing', loggedInUser[0].username);
     });
 
     //Listen for events
@@ -99,13 +120,13 @@ function createSentMessageContainer(count) {
     sentMessageParentContainer.classList.add('justify-content-end');
     sentMessageParentContainer.classList.add('mb-2');
     sentMessageDiv.classList.add('message_container_send');
-    imageDiv.classList.add('img_cont_msg');
+    // imageDiv.classList.add('img_cont_msg');
     sentMessageParagraph.classList.add('sentMessage' + count);
     sentMessageTimeSpan.classList.add('sentMessageTime');
     sentMessageTimeSpan.classList.add('msg_time_send');
-    senderProfilePicture.classList.add('rounded-circle');
-    senderProfilePicture.classList.add('user_img_msg');
-    senderProfilePicture.src = "";
+    // senderProfilePicture.classList.add('rounded-circle');
+    // senderProfilePicture.classList.add('user_img_msg');
+    // senderProfilePicture.src = "";
 
     /**
      * Dynamically appending child elements
@@ -147,14 +168,14 @@ function createReceivedMessageContainer(count) {
     receivedMessageParentContainer.classList.add('justify-content-start');
     receivedMessageParentContainer.classList.add('mb-2');
     receivedMessageDiv.classList.add('message_container');
-    receivedImageDiv.classList.add('img_cont_msg');
+    // receivedImageDiv.classList.add('img_cont_msg');
     receivedImageDiv.classList.add('profilePicture');
     receivedMessageParagraph.classList.add('receivedMessage' + count);
     receivedMessageTimeSpan.classList.add('receivedMessageTime');
     receivedMessageTimeSpan.classList.add('msg_time');
-    receivedProfilePicture.classList.add('rounded-circle');
-    receivedProfilePicture.classList.add('user_img_msg');
-    receivedProfilePicture.src = "";
+    // receivedProfilePicture.classList.add('rounded-circle');
+    // receivedProfilePicture.classList.add('user_img_msg');
+    // receivedProfilePicture.src = "";
 
     /**
      * Dynamically appending child elements

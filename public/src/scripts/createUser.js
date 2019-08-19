@@ -10,7 +10,7 @@ $(document).ready(() => {
     // const profilePicture = document.querySelector('.profilePicture');
     const registerBtn = document.querySelector('.register');
 
-    const url = 'https://liachat.herokuapp.com/liachat.api/user/registerUser';
+    const url = 'http://localhost:9000/liachat.api/user/registerUser';
 
     login.addEventListener('click', (event) => {
         event.preventDefault();
@@ -26,7 +26,7 @@ $(document).ready(() => {
             username.style.border = '1px solid red';
             return;
         } else {
-            if (email.value == '' || !email) {
+            if (email.value == '') {
                 email.style.border = '1px solid red';
                 return;
             } else {
@@ -53,19 +53,19 @@ $(document).ready(() => {
                                 } else {
                                     // Create new user object
                                     const NewUser = {
-                                        username: username.value,
-                                        email: email.value,
-                                        password: password.value,
+                                        username: username.value.toLowerCase(),
+                                        email: email.value.toLowerCase(),
+                                        password: password.value.toLowerCase(),
                                         phone: phone.value
                                     }
                                     $.post(url, NewUser, (user, statusResponse) => {
                                         if (user === null) {
-                                            alert.innerHTML = "Registeration Error";
+                                            alert.innerHTML = "Error creating account. Please make sure your credentials are correct";
                                             alert.classList.add('alert-danger');
                                             alert.classList.remove('d-none');
                                         } else {
-                                            localStorage.setItem('LoggedUser', user);
-                                            window.location = "./src/views/index.chat.html"
+
+                                            window.location = "../../index.html"
                                         }
                                     });
 
