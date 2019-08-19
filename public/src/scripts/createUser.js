@@ -59,13 +59,13 @@ $(document).ready(() => {
                                         phone: phone.value
                                     }
                                     $.post(url, NewUser, (user, statusResponse) => {
-                                        if (statusResponse == "success") {
-                                            localStorage.setItem('LoggedUser', user);
-                                            window.location = "./src/views/index.chat.html"
-                                        } else {
-                                            alert.innerHTML = 'Error registering user'
+                                        if (user === null) {
+                                            alert.innerHTML = "Registeration Error";
                                             alert.classList.add('alert-danger');
                                             alert.classList.remove('d-none');
+                                        } else {
+                                            localStorage.setItem('LoggedUser', user);
+                                            window.location = "./src/views/index.chat.html"
                                         }
                                     });
 
