@@ -51,6 +51,8 @@
 								<li><i class="fas fa-users"></i> Add to close friends</li>
 								<li><i class="fas fa-plus"></i> Add to group</li>
 								<li><i class="fas fa-ban"></i> Block</li>
+								<li<i class="fas fa-sign-out-alt logOut" data-toggle="modal" data-target="#modal"></i>
+									Logout</li<i>
 							</ul>
 						</div>
 					</div>
@@ -121,6 +123,43 @@
 
 		</div>
 	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<!-- Modal header -->
+				<!-- <div class="modal-header">
+ 				<h3 class="modal-title text-primary text-capitalize text-center">Please drop a feedback</h3>
+ 				<button type="button" class="close" data-dismiss="modal">
+ 					&times;
+ 				</button>
+ 			</div> -->
+				<!-- End of Modal header -->
+
+				<!-- Modal Body -->
+				<div class="modal-body container p-5">
+					Hi,<span class="currentUser"></span> Are you sure you want to leave the chatroom?
+				</div>
+				<!-- End of Modal Body -->
+
+				<!-- Modal Footer -->
+				<div class="modal-footer">
+					<!-- <div class="row">
+                        <input type="submit" value="Submit">
+                    </div> -->
+					<button type="button" data-dismiss="modal" class="btn btn-success px-5 closeChat">Yes</button>
+					<button type="button" data-dismiss="modal" class="btn btn-danger">Cancel</button>
+				</div>
+				<!-- End of Modal footer -->
+			</div>
+		</div>
+	</div>
+	<!-- End of Modal -->
+
+
+
 
 	<script src="../../jquery/jquery-3.3.1.min.js"></script>
 

@@ -16,6 +16,7 @@ $(document).ready(function () {
     const textMessage = document.querySelector('.textMessage');
     const msg_card_body = document.querySelector('.msg_card_body');
     const sendArrow = document.querySelector('.sendArrow');
+    const logOut = document.querySelector('.logOut');
 
     /**
      * Get loggedin user
@@ -34,6 +35,13 @@ $(document).ready(function () {
             alert('query failed');
         }
     });
+
+    /**
+     * User Logout
+     */
+    // logOut.addEventListener('click', (event) => {
+    //     event.preventDefault();
+    // });
 
     //These counters are...
     let counter = 0;
