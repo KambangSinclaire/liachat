@@ -39,12 +39,13 @@ $(document).ready(() => {
                 }
 
                 $.post(url, user, (statusResponse, user) => {
-                    if (statusResponse === "success") {
+                    if (statusResponse == "success") {
                         localStorage.setItem('LoggedUser', user);
                         window.location = "./src/views/index.chat.html"
                     } else {
                         alert.innerHTML = "Login Error";
                         alert.classList.add('alert-danger');
+                        alert.classList.remove('d-none');
                     }
                 });
 
