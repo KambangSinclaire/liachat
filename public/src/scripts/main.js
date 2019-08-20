@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
     const alertMessage = document.querySelector('.alert');
-    const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
-    const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
-    const usersUrl = 'http://localhost:9000/liachat.api/users';
-    const sentMessagesUrl = 'http://localhost:9000/liachat.api/message/sent/save';
-    const receivedMessagesUrl = 'http://localhost:9000/liachat.api/message/received/saveMessage';
-    const allMessagesUrl = 'http://localhost:9000/liachat.api/messages';
+    const checkLogInUrl = 'https://liachat.herokuapp.com/liachat.api/user/authenticate';
+    const logOutUrl = 'https://liachat.herokuapp.com/liachat.api/user/logOut';
+    const usersUrl = 'https://liachat.herokuapp.com/liachat.api/users';
+    const sentMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/message/sent/save';
+    const receivedMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/message/received/saveMessage';
+    const allMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/messages';
 
 
     /**
