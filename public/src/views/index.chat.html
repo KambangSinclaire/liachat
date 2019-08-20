@@ -3,7 +3,9 @@
 
 <head>
 	<title>LiaChat</title>
-
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
 		integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -25,14 +27,14 @@
 <!--Coded With Love By Mutiullah Samim-->
 
 
-<body>
+<body class="chatRoom">
 	<div class="container-fluid h-100">
 		<!-- <div class="alert d-none alert-dismissible w-50 m-auto text-center bg-secondary text-warning">
 			<button type="button" class="close text-white" data-dismiss="alert">&times;</button>
 		</div> -->
 		<div class="row justify-content-center h-100">
 
-			<div class="col-md-8 col-xl-6 chat">
+			<div class="col-sm-8 col-md-8 col-xl-6 chat">
 				<div class="card">
 					<div class="card-header msg_head">
 						<div class="d-flex bd-highlight">
@@ -43,6 +45,7 @@
 							<div class="user_info">
 								<span class="groupName">Nginya Technologies</span>
 								<p class="currentMessages">Creativity and Impact</p>
+								<i class="loggedUser typing"></i>
 							</div>
 							<div class="video_cam">
 								<span><i class="fas fa-video"></i></span>
@@ -50,9 +53,11 @@
 							</div>
 						</div>
 
-						<span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
-						<div class="action_menu">
+						<span id="action_menu_btn" class="openMenuBtn"><i class="fas fa-ellipsis-v"></i></span>
+						<div class="action_menu openMenu">
 							<ul>
+								<li class="text-warning allLoggedIn"><i class="fas fa-user-friends"></i> View all users
+								</li>
 								<li><i class="fas fa-user-circle"></i> View profile</li>
 								<li><i class="fas fa-users"></i> Add to close friends</li>
 								<li><i class="fas fa-plus"></i> Add to group</li>
@@ -92,7 +97,7 @@
 			</div>
 
 
-			<div class="col-md-4 col-xl-3 chat">
+			<div class="col-sm-4 col-md-4 col-xl-3 chat">
 				<div class="card mb-sm-3 mb-md-0 contacts_card">
 					<div class="card-header">
 						<div class="input-group">
@@ -102,6 +107,22 @@
 							</div>
 						</div>
 					</div>
+
+
+					<span id="action_menu_btn" class="toggleUsersBtn"><i class="fas fa-ellipsis-v"></i></span>
+					<div class="action_menu toggleUsersMenu">
+						<ul>
+							<li class="text-warning closeContact_Card"><i class="fas fa-user-friends"></i> close
+							</li>
+							<!-- <li><i class="fas fa-user-circle"></i> View profile</li>
+							<li><i class="fas fa-users"></i> Add to close friends</li>
+							<li><i class="fas fa-plus"></i> Add to group</li>
+							<li><i class="fas fa-ban"></i> Block</li> -->
+							<li data-toggle="modal" data-target="#modal"><i class="fas fa-sign-out-alt"></i>
+								Logout</li>
+						</ul>
+					</div>
+
 					<!-- Current and recent user section -->
 					<div class="card-body contacts_body">
 						<h3 class="text-capitalize text-bold text-center text-warning">users</h3>

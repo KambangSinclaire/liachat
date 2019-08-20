@@ -271,20 +271,10 @@ html {
 
 @media(max-width: 576px) {
     .contacts_card {
-        margin-bottom: 10px !important;
-        height: 100vh !important;
-    }
-
-    .fa-video {
+        margin-bottom: 5px !important;
+        height: auto !important;
         display: none;
     }
-
-    .fa-phone {
-        display: none;
-    }
-}
-
-@media(max-width: 76px) {
 
     .fa-video {
         display: none;
