@@ -12,6 +12,9 @@ $(document).ready(() => {
 
     const url = 'https://liachat.herokuapp.com/liachat.api/user/registerUser';
 
+    // const url = 'http://localhost:9000/liachat.api/user/registerUser';
+
+
     login.addEventListener('click', (event) => {
         event.preventDefault();
         window.location = "../../index.html";

@@ -1,12 +1,23 @@
 $(document).ready(function () {
 
     const alertMessage = document.querySelector('.alert');
+
+
     const checkLogInUrl = 'https://liachat.herokuapp.com/liachat.api/user/authenticate';
     const logOutUrl = 'https://liachat.herokuapp.com/liachat.api/user/logOut';
     const usersUrl = 'https://liachat.herokuapp.com/liachat.api/users';
     const sentMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/message/sent/save';
     const receivedMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/message/received/saveMessage';
     const allMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/messages';
+
+
+
+    // const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
+    // const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
+    // const usersUrl = 'http://localhost:9000/liachat.api/users';
+    // const sentMessagesUrl = 'http://localhost:9000/liachat.api/message/sent/save';
+    // const receivedMessagesUrl = 'http://localhost:9000/liachat.api/message/received/saveMessage';
+    // const allMessagesUrl = 'http://localhost:9000/liachat.api/messages';
 
 
     /**
@@ -39,6 +50,7 @@ $(document).ready(function () {
                 const closeContact_Card = document.querySelector('.closeContact_Card');
                 const chatRoom = document.querySelector('.chatRoom');
                 const action_menu = document.querySelector('.action_menu');
+                let typing = document.querySelector('.typing');
                 const body = document.querySelector('body');
                 loggedUser.classList.add('text-capitalize');
                 loggedUser.innerHTML = `<strong class="text-warning">${user.user.username}</strong>`;
@@ -120,7 +132,6 @@ $(document).ready(function () {
 
                             if (user.username == loggedInUser[0].username) {
                                 let lastSeenAt = document.querySelector('.lastSeenAt' + countB);
-                                let typing = document.querySelector('.typing');
                                 socket.on('typing', (data) => {
                                     // const username = document.querySelector('.username' + countA);
                                     // username.innerHTML = loggedInUser[0].username;
@@ -139,6 +150,7 @@ $(document).ready(function () {
 
                 //Listen for events
                 socket.on('message', (data) => {
+                    typing.innerHTML = `<p class="text-warning"><em> ${data.sender} is online</em></p>`;
                     const messageContainer = createReceivedMessageContainer(counter2);
                     msg_card_body.appendChild(messageContainer);
                     const receivedMessage = document.querySelector('.receivedMessage' + counter2);
@@ -186,6 +198,7 @@ $(document).ready(function () {
                 //Send Message event listener
                 send_btn.addEventListener('click', (event) => {
                     event.preventDefault();
+
 
                     let message = textMessage.value;
                     if (message == "") {
