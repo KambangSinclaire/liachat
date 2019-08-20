@@ -8,209 +8,218 @@ $(document).ready(function () {
     const receivedMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/message/received/saveMessage';
     const allMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/messages';
 
+    $(window).on('load', () => {
 
-    /**
-         * Get loggedin user
-         */
-    const userid = JSON.parse(localStorage.getItem("authUser"));
+        /**
+               * Get loggedin user
+               */
+        const userid = JSON.parse(localStorage.getItem("authUser"));
 
-    let loggedInUser = [];
+        let loggedInUser = [];
 
-    if (userid != null) {
-        $.post(checkLogInUrl, { userId: userid }, (user, error) => {
-            if (user.msg) {
-                // alertMessage.textContent = `Welcome Dear ${user.user.username}, enjoy using LIA`;
-                // alertMessage.classList.add('alert-primary');
-                // alertMessage.classList.remove('d-none');
-                loggedInUser.push(user.user);
-
-
-                /**
-                 * Getting DOM elements
-                 */
-                const send_btn = document.querySelector('.send_btn');
-                const textMessage = document.querySelector('.textMessage');
-                const msg_card_body = document.querySelector('.msg_card_body');
-                const sendArrow = document.querySelector('.sendArrow');
-                const logOut = document.querySelector('.logOut');
+        if (userid != null) {
+            $.post(checkLogInUrl, { userId: userid }, (user, error) => {
+                if (user.msg) {
+                    // alertMessage.textContent = `Welcome Dear ${user.user.username}, enjoy using LIA`;
+                    // alertMessage.classList.add('alert-primary');
+                    // alertMessage.classList.remove('d-none');
+                    loggedInUser.push(user.user);
 
 
-
-                //These counters are...
-                let counter = 0;
-                let counter2 = 0;
-
-                $(window).on('load', () => {
                     /**
-                 * Getting sent messages
-                 */
-                    $.get(allMessagesUrl, (messages, error) => {
-
-                        if (messages != null) {
-
-                            messages.forEach((message) => {
-
-                                if (message.isSent) {
-                                    // Sent messages here
-                                    let messageContainer = createSentMessageContainer(counter);
-                                    msg_card_body.append(messageContainer);
-                                    let sentMessage = document.querySelector('.sentMessage' + counter);
-                                    sentMessage.textContent = message.message;
-                                    console.log(message);
-                                    console.log(message.isSent);
-                                    counter++;
-
-                                } else {
-                                    // Received messages here
-                                    let messageContainer = createReceivedMessageContainer(counter2);
-                                    msg_card_body.appendChild(messageContainer);
-                                    let receivedMessage = document.querySelector('.receivedMessage' + counter2);
-                                    let sender = document.createElement('p');
-                                    sender.innerHTML = `<em class="text-secondary text-italic">@${message.author}</em>`
-                                    receivedMessage.textContent += `${message.message}`;
-                                    receivedMessage.appendChild(sender);
-                                    counter2++;
-                                }
-                            })
-                        }
-
-
-                    });
-
-                });
+                     * Getting DOM elements
+                     */
+                    const send_btn = document.querySelector('.send_btn');
+                    const textMessage = document.querySelector('.textMessage');
+                    const msg_card_body = document.querySelector('.msg_card_body');
+                    const sendArrow = document.querySelector('.sendArrow');
+                    const logOut = document.querySelector('.logOut');
 
 
 
+                    //These counters are...
+                    let counter = 0;
+                    let counter2 = 0;
 
-                //Socket.io client
-                const socket = io()
+                    $(window).on('load', () => {
+                        /**
+                     * Getting sent messages
+                     */
+                        $.get(allMessagesUrl, (messages, error) => {
 
-                $('#action_menu_btn').click(function () {
-                    $('.action_menu').toggle();
-                });
+                            if (messages != null) {
 
+                                messages.forEach((message) => {
 
-                const allUsers = document.querySelector('.contacts');
-                $.get(usersUrl, (users, error) => {
-                    let countA = 0;
-                    let countB = 0;
-                    users.forEach((user) => {
-                        if (user.isLoggedIn) {
-                            const status = 'Available';
-                            const listUser = createLoggedInUsers(user.username, status, countA, countB);
-                            allUsers.appendChild(listUser);
+                                    if (message.isSent) {
+                                        // Sent messages here
+                                        let messageContainer = createSentMessageContainer(counter);
+                                        msg_card_body.append(messageContainer);
+                                        let sentMessage = document.querySelector('.sentMessage' + counter);
+                                        sentMessage.textContent = message.message;
+                                        console.log(message);
+                                        console.log(message.isSent);
+                                        counter++;
 
-
-                            if (user.username === loggedInUser[0].username) {
-                                let lastSeenAt = document.querySelector('.lastSeenAt' + countB);
-                                socket.on('typing', (data) => {
-                                    // const username = document.querySelector('.username' + countA);
-                                    // username.innerHTML = loggedInUser[0].username;
-                                    lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
-                                });
+                                    } else {
+                                        // Received messages here
+                                        let messageContainer = createReceivedMessageContainer(counter2);
+                                        msg_card_body.appendChild(messageContainer);
+                                        let receivedMessage = document.querySelector('.receivedMessage' + counter2);
+                                        let sender = document.createElement('p');
+                                        sender.innerHTML = `<em class="text-secondary text-italic">@${message.author}</em>`
+                                        receivedMessage.textContent += `${message.message}`;
+                                        receivedMessage.appendChild(sender);
+                                        counter2++;
+                                    }
+                                })
                             }
-                            countB++;
+
+
+                        });
+
+                    });
+
+
+
+
+                    //Socket.io client
+                    const socket = io()
+
+                    $('#action_menu_btn').click(function () {
+                        $('.action_menu').toggle();
+                    });
+
+
+                    window.addEventListener('focus', () => {
+                        const allUsers = document.querySelector('.contacts');
+                        $.get(usersUrl, (users, error) => {
+                            let countA = 0;
+                            let countB = 0;
+                            users.forEach((user) => {
+                                if (user.isLoggedIn) {
+                                    const status = 'Available';
+                                    const listUser = createLoggedInUsers(user.username, status, countA, countB);
+                                    allUsers.appendChild(listUser);
+
+
+                                    if (user.username === loggedInUser[0].username) {
+                                        let lastSeenAt = document.querySelector('.lastSeenAt' + countB);
+                                        socket.on('typing', (data) => {
+                                            // const username = document.querySelector('.username' + countA);
+                                            // username.innerHTML = loggedInUser[0].username;
+                                            lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
+                                        });
+                                    }
+                                    countB++;
+                                }
+                            });
+                        });
+
+
+                    });
+
+
+                    //Listen for events
+                    socket.on('message', (data) => {
+                        const messageContainer = createReceivedMessageContainer(counter2);
+                        msg_card_body.appendChild(messageContainer);
+                        const receivedMessage = document.querySelector('.receivedMessage' + counter2);
+                        let sender = document.createElement('p');
+                        sender.innerHTML = `<em class="text-secondary text-italic">@${data.sender}</em>`
+                        receivedMessage.textContent += `${data.message}`;
+                        receivedMessage.appendChild(sender);
+                        counter2++;
+                        let receivedMsg = {
+                            message: data.message,
+                            author: data.sender,
+                            time: new Date(),
+                            isSent: false
+                        }
+                        $.post(receivedMessagesUrl, receivedMsg);
+                    });
+
+
+
+
+                    // User Logout
+                    logOut.addEventListener('click', (event) => {
+                        console.log(loggedInUser[0].id);
+
+                        event.preventDefault();
+                        $.post(logOutUrl, { userId: loggedInUser[0].id, isLoggedIn: false }, (user, error) => {
+                            if (user != null) {
+                                localStorage.clear();
+                                window.location = '../../index.html';
+                            }
+                        })
+
+                    });
+                    // End User Logout
+
+
+
+
+                    textMessage.addEventListener("keypress", () => {
+                        sendArrow.classList.remove('d-none');
+                    });
+
+
+
+                    //Send Message event listener
+                    send_btn.addEventListener('click', (event) => {
+                        event.preventDefault();
+
+                        let message = textMessage.value;
+                        if (message == "") {
+                            alert("message field cannot be empty");
+                        } else {
+                            socket.emit('message', { message: message, sender: loggedInUser[0].username });
+                            const messageContainer = createSentMessageContainer(counter);
+                            msg_card_body.append(messageContainer);
+                            const sentMessage = document.querySelector('.sentMessage' + counter);
+                            sentMessage.textContent = message;
+                            counter++;
+                            textMessage.value = "";
+                            // const available = document.querySelectorAll('.available');
+                            // available.innerHTML = 'Available'
+
+                            let sentMsg = {
+                                message: message,
+                                author: loggedInUser[0].username,
+                                time: new Date(),
+                                isSent: true
+                            }
+                            $.post(sentMessagesUrl, sentMsg);
                         }
                     });
-                });
+                    //End of Send Message event listener
+
+
+
+                    //Event listener for typing event
+                    textMessage.addEventListener('keypress', () => {
+
+                        socket.emit('typing', loggedInUser[0].username);
+                    });
+                    //End Event listener for typing event
+
+
+
+                } else {
+                    window.location = '../../index.html';
+                }
+            });
+
+        } else {
+            window.location = '../../index.html';
+        }
 
 
 
 
-                //Listen for events
-                socket.on('message', (data) => {
-                    const messageContainer = createReceivedMessageContainer(counter2);
-                    msg_card_body.appendChild(messageContainer);
-                    const receivedMessage = document.querySelector('.receivedMessage' + counter2);
-                    let sender = document.createElement('p');
-                    sender.innerHTML = `<em class="text-secondary text-italic">@${data.sender}</em>`
-                    receivedMessage.textContent += `${data.message}`;
-                    receivedMessage.appendChild(sender);
-                    counter2++;
-                    let receivedMsg = {
-                        message: data.message,
-                        author: data.sender,
-                        time: new Date(),
-                        isSent: false
-                    }
-                    $.post(receivedMessagesUrl, receivedMsg);
-                });
+    })
 
-
-
-
-                // User Logout
-                logOut.addEventListener('click', (event) => {
-                    console.log(loggedInUser[0].id);
-
-                    event.preventDefault();
-                    $.post(logOutUrl, { userId: loggedInUser[0].id, isLoggedIn: false }, (user, error) => {
-                        if (user != null) {
-                            localStorage.clear();
-                            window.location = '../../index.html';
-                        }
-                    })
-
-                });
-                // End User Logout
-
-
-
-
-                textMessage.addEventListener("keypress", () => {
-                    sendArrow.classList.remove('d-none');
-                });
-
-
-
-                //Send Message event listener
-                send_btn.addEventListener('click', (event) => {
-                    event.preventDefault();
-
-                    let message = textMessage.value;
-                    if (message == "") {
-                        alert("message field cannot be empty");
-                    } else {
-                        socket.emit('message', { message: message, sender: loggedInUser[0].username });
-                        const messageContainer = createSentMessageContainer(counter);
-                        msg_card_body.append(messageContainer);
-                        const sentMessage = document.querySelector('.sentMessage' + counter);
-                        sentMessage.textContent = message;
-                        counter++;
-                        textMessage.value = "";
-                        // const available = document.querySelectorAll('.available');
-                        // available.innerHTML = 'Available'
-
-                        let sentMsg = {
-                            message: message,
-                            author: loggedInUser[0].username,
-                            time: new Date(),
-                            isSent: true
-                        }
-                        $.post(sentMessagesUrl, sentMsg);
-                    }
-                });
-                //End of Send Message event listener
-
-
-
-                //Event listener for typing event
-                textMessage.addEventListener('keypress', () => {
-
-                    socket.emit('typing', loggedInUser[0].username);
-                });
-                //End Event listener for typing event
-
-
-
-            } else {
-                window.location = '../../index.html';
-            }
-        });
-
-    } else {
-        window.location = '../../index.html';
-    }
 
 });
 
