@@ -271,8 +271,8 @@ html {
 
 @media(max-width: 576px) {
     .contacts_card {
-        margin-bottom: 15px !important;
-        height: auto !important;
+        margin-bottom: 10px !important;
+        height: 100vh !important;
     }
 
     .fa-video {
