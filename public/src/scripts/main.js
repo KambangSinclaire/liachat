@@ -1,17 +1,18 @@
 $(document).ready(function () {
 
     const alertMessage = document.querySelector('.alert');
-    const checkLogInUrl = 'https://liachat.herokuapp.com/liachat.api/user/authenticate';
-    const logOutUrl = 'https://liachat.herokuapp.com/liachat.api/user/logOut';
-    const usersUrl = 'https://liachat.herokuapp.com/liachat.api/users';
+    const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
+    const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
+    const usersUrl = 'http://localhost:9000/liachat.api/users';
+    const sentMessagesUrl = 'http://localhost:9000/liachat.api/message/sent/save';
+    const receivedMessagesUrl = 'http://localhost:9000/liachat.api/message/received/saveMessage';
+    const allMessagesUrl = 'http://localhost:9000/liachat.api/messages';
 
 
     /**
          * Get loggedin user
          */
     const userid = JSON.parse(localStorage.getItem("authUser"));
-
-    console.log(userid);
 
     let loggedInUser = [];
 
@@ -24,11 +25,60 @@ $(document).ready(function () {
                 loggedInUser.push(user.user);
 
 
+                /**
+                 * Getting DOM elements
+                 */
+                const send_btn = document.querySelector('.send_btn');
+                const textMessage = document.querySelector('.textMessage');
+                const msg_card_body = document.querySelector('.msg_card_body');
+                const sendArrow = document.querySelector('.sendArrow');
+                const logOut = document.querySelector('.logOut');
+
 
 
                 //These counters are...
                 let counter = 0;
                 let counter2 = 0;
+
+                $(window).on('load', () => {
+                    /**
+                 * Getting sent messages
+                 */
+                    $.get(allMessagesUrl, (messages, error) => {
+
+                        if (messages != null) {
+
+                            messages.forEach((message) => {
+
+                                if (message.isSent) {
+                                    // Sent messages here
+                                    let messageContainer = createSentMessageContainer(counter);
+                                    msg_card_body.append(messageContainer);
+                                    let sentMessage = document.querySelector('.sentMessage' + counter);
+                                    sentMessage.textContent = message.message;
+                                    console.log(message);
+                                    console.log(message.isSent);
+                                    counter++;
+
+                                } else {
+                                    // Received messages here
+                                    let messageContainer = createReceivedMessageContainer(counter2);
+                                    msg_card_body.appendChild(messageContainer);
+                                    let receivedMessage = document.querySelector('.receivedMessage' + counter2);
+                                    let sender = document.createElement('p');
+                                    sender.innerHTML = `<em class="text-secondary text-italic">@${message.author}</em>`
+                                    receivedMessage.textContent += `${message.message}`;
+                                    receivedMessage.appendChild(sender);
+                                    counter2++;
+                                }
+                            })
+                        }
+
+
+                    });
+
+                });
+
 
 
 
@@ -55,15 +105,16 @@ $(document).ready(function () {
                                 username.innerHTML = loggedInUser[0].username;
                                 lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
                             });
-                            // lastSeenAt.innerHTML = 'Online';
+
                         }
                     });
                 });
 
-                //Listen for events
-                // const lastSeenAt2 = document.querySelector('.lastSeenAt');
-                socket.on('message', (data) => {
 
+
+
+                //Listen for events
+                socket.on('message', (data) => {
                     const messageContainer = createReceivedMessageContainer(counter2);
                     msg_card_body.appendChild(messageContainer);
                     const receivedMessage = document.querySelector('.receivedMessage' + counter2);
@@ -72,19 +123,14 @@ $(document).ready(function () {
                     receivedMessage.textContent += `${data.message}`;
                     receivedMessage.appendChild(sender);
                     counter2++;
+                    let receivedMsg = {
+                        message: data.message,
+                        author: data.sender,
+                        time: new Date(),
+                        isSent: false
+                    }
+                    $.post(receivedMessagesUrl, receivedMsg);
                 });
-
-                const send_btn = document.querySelector('.send_btn');
-                const textMessage = document.querySelector('.textMessage');
-                const msg_card_body = document.querySelector('.msg_card_body');
-                const sendArrow = document.querySelector('.sendArrow');
-                const logOut = document.querySelector('.logOut');
-
-
-
-
-
-
 
 
 
@@ -119,13 +165,20 @@ $(document).ready(function () {
                         alert("message field cannot be empty");
                     } else {
                         socket.emit('message', { message: message, sender: loggedInUser[0].username });
-
                         const messageContainer = createSentMessageContainer(counter);
                         msg_card_body.append(messageContainer);
                         const sentMessage = document.querySelector('.sentMessage' + counter);
                         sentMessage.textContent = message;
                         counter++;
                         textMessage.value = "";
+
+                        let sentMsg = {
+                            message: message,
+                            author: loggedInUser[0].username,
+                            time: new Date(),
+                            isSent: true
+                        }
+                        $.post(sentMessagesUrl, sentMsg);
                     }
 
                 });
