@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
     const alertMessage = document.querySelector('.alert');
-    const checkLogInUrl = 'https://liachat.herokuapp.com/liachat.api/user/authenticate';
-    const logOutUrl = 'https://liachat.herokuapp.com/liachat.api/user/logOut';
-    const usersUrl = 'https://liachat.herokuapp.com/liachat.api/users';
-    const sentMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/message/sent/save';
-    const receivedMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/message/received/saveMessage';
-    const allMessagesUrl = 'https://liachat.herokuapp.com/liachat.api/messages';
+    const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
+    const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
+    const usersUrl = 'http://localhost:9000/liachat.api/users';
+    const sentMessagesUrl = 'http://localhost:9000/liachat.api/message/sent/save';
+    const receivedMessagesUrl = 'http://localhost:9000/liachat.api/message/received/saveMessage';
+    const allMessagesUrl = 'http://localhost:9000/liachat.api/messages';
 
 
     /**
@@ -91,21 +91,25 @@ $(document).ready(function () {
 
 
                 const allUsers = document.querySelector('.contacts');
-
                 $.get(usersUrl, (users, error) => {
+                    let countA = 0;
+                    let countB = 0;
                     users.forEach((user) => {
                         if (user.isLoggedIn) {
-                            const listUser = createLoggedInUsers(user.username);
+                            const status = 'Available';
+                            const listUser = createLoggedInUsers(user.username, status, countA, countB);
                             allUsers.appendChild(listUser);
 
 
-                            let lastSeenAt = document.querySelector('.lastSeenAt');
-                            socket.on('typing', (data) => {
-                                const username = document.querySelector('.username');
-                                username.innerHTML = loggedInUser[0].username;
-                                lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
-                            });
-
+                            if (user.username === loggedInUser[0].username) {
+                                let lastSeenAt = document.querySelector('.lastSeenAt' + countB);
+                                socket.on('typing', (data) => {
+                                    // const username = document.querySelector('.username' + countA);
+                                    // username.innerHTML = loggedInUser[0].username;
+                                    lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
+                                });
+                            }
+                            countB++;
                         }
                     });
                 });
@@ -136,14 +140,13 @@ $(document).ready(function () {
 
 
                 // User Logout
-
                 logOut.addEventListener('click', (event) => {
                     console.log(loggedInUser[0].id);
 
                     event.preventDefault();
                     $.post(logOutUrl, { userId: loggedInUser[0].id, isLoggedIn: false }, (user, error) => {
                         if (user != null) {
-                            localStorage.removeItem("authUser");
+                            localStorage.clear();
                             window.location = '../../index.html';
                         }
                     })
@@ -157,6 +160,10 @@ $(document).ready(function () {
                 textMessage.addEventListener("keypress", () => {
                     sendArrow.classList.remove('d-none');
                 });
+
+
+
+                //Send Message event listener
                 send_btn.addEventListener('click', (event) => {
                     event.preventDefault();
 
@@ -171,6 +178,8 @@ $(document).ready(function () {
                         sentMessage.textContent = message;
                         counter++;
                         textMessage.value = "";
+                        // const available = document.querySelectorAll('.available');
+                        // available.innerHTML = 'Available'
 
                         let sentMsg = {
                             message: message,
@@ -180,15 +189,17 @@ $(document).ready(function () {
                         }
                         $.post(sentMessagesUrl, sentMsg);
                     }
-
                 });
+                //End of Send Message event listener
 
 
 
+                //Event listener for typing event
                 textMessage.addEventListener('keypress', () => {
 
                     socket.emit('typing', loggedInUser[0].username);
                 });
+                //End Event listener for typing event
 
 
 
@@ -298,7 +309,7 @@ function createReceivedMessageContainer(count) {
 
 
 
-function createLoggedInUsers(nameOfUser) {
+function createLoggedInUsers(nameOfUser, status, countA, countB) {
 
     /**
     * Dynamically creating message fields
@@ -310,7 +321,7 @@ function createLoggedInUsers(nameOfUser) {
     // let userOnlineIcon = document.createElement('span');
     let userInfo = document.createElement('div');
     let usernameSpanTag = document.createElement('span');
-    let lastSeenStatus = document.createElement('span');
+    let lastSeenStatus = document.createElement('p');
 
     /**
      * Dynamically adding styles via classes
@@ -328,14 +339,16 @@ function createLoggedInUsers(nameOfUser) {
 
 
     userInfo.classList.add('user_info');
-    usernameSpanTag.classList.add('username');
+    usernameSpanTag.classList.add('username' + countA);
     usernameSpanTag.classList.add('text-capitalize');
-    lastSeenStatus.classList.add('lastSeenAt');
+    lastSeenStatus.classList.add('lastSeenAt' + countB);
+    lastSeenStatus.classList.add('available');
 
     /**
     * Dynamically adding content 
     */
     usernameSpanTag.innerHTML = nameOfUser;
+    lastSeenStatus.innerHTML = status;
 
 
     /**
