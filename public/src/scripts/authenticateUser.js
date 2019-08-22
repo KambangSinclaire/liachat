@@ -1,22 +1,15 @@
 $(document).ready(() => {
 
+    const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
+    const setAuthUrl = 'https://liachat.herokuapp.com/liachat.api/user/setAuth';
+
+
 
     const username = document.querySelector('.username');
     const password = document.querySelector('.password');
     const loginBtn = document.querySelector('.login');
     const register = document.querySelector('.register');
     const alert = document.querySelector('.alert');
-    const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
-    const setAuthUrl = 'https://liachat.herokuapp.com/liachat.api/user/setAuth';
-
-
-
-
-
-    // const url = 'http://localhost:9000/liachat.api/user/login';
-    // const setAuthUrl = 'http://localhost:9000/liachat.api/user/setAuth';
-
-
 
 
 

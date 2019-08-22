@@ -1,6 +1,28 @@
 $(document).ready(function () {
 
-    const alertMessage = document.querySelector('.alert');
+
+    /**
+     * Getting DOM elements
+     */
+
+
+
+    const send_btn = document.querySelector('.send_btn');
+    const textMessage = document.querySelector('.textMessage');
+    const msg_card_body = document.querySelector('.msg_card_body');
+    const sendArrow = document.querySelector('.sendArrow');
+    const logOut = document.querySelector('.logOut');
+    const loggedUser = document.querySelector('.loggedUser');
+    const allLoggedIn = document.querySelector('.allLoggedIn');
+    const contacts_card = document.querySelector('.contacts_card');
+    const closeContact_Card = document.querySelector('.closeContact_Card');
+    const chatRoom = document.querySelector('.chatRoom');
+    const action_menu = document.querySelector('.action_menu');
+    let typing = document.querySelector('.typing');
+    const body = document.querySelector('body');
+
+
+
 
 
     const checkLogInUrl = 'https://liachat.herokuapp.com/liachat.api/user/authenticate';
@@ -12,17 +34,50 @@ $(document).ready(function () {
 
 
 
-    // const checkLogInUrl = 'http://localhost:9000/liachat.api/user/authenticate';
-    // const logOutUrl = 'http://localhost:9000/liachat.api/user/logOut';
-    // const usersUrl = 'http://localhost:9000/liachat.api/users';
-    // const sentMessagesUrl = 'http://localhost:9000/liachat.api/message/sent/save';
-    // const receivedMessagesUrl = 'http://localhost:9000/liachat.api/message/received/saveMessage';
-    // const allMessagesUrl = 'http://localhost:9000/liachat.api/messages';
+
+    body.onload = function () {
+        $.get(allMessagesUrl, (messages, error) => {
+
+            if (messages != null) {
+
+                messages.forEach((message) => {
+
+                    if (message.isSent) {
+                        // Sent messages here
+                        let messageContainer = createSentMessageContainer(counter);
+                        msg_card_body.append(messageContainer);
+                        let sentMessage = document.querySelector('.sentMessage' + counter);
+                        sentMessage.textContent = message.message;
+                        console.log(message);
+                        console.log(message.isSent);
+                        counter++;
+
+                    } else {
+                        // Received messages here
+                        let messageContainer = createReceivedMessageContainer(counter2);
+                        msg_card_body.appendChild(messageContainer);
+                        let receivedMessage = document.querySelector('.receivedMessage' + counter2);
+                        let sender = document.createElement('p');
+                        sender.innerHTML = `<em class="text-secondary text-italic">@${message.author}</em>`
+                        receivedMessage.textContent += `${message.message}`;
+                        receivedMessage.appendChild(sender);
+                        counter2++;
+                    }
+                })
+            }
+
+
+        });
+    }
+
+
+    const alertMessage = document.querySelector('.alert');
+
 
 
     /**
-         * Get loggedin user
-         */
+     * Get loggedin user
+     */
     const userid = JSON.parse(localStorage.getItem("authUser"));
 
     let loggedInUser = [];
@@ -30,30 +85,12 @@ $(document).ready(function () {
     if (userid != null) {
         $.post(checkLogInUrl, { userId: userid }, (user, error) => {
             if (user.msg) {
-                // alertMessage.textContent = `Welcome Dear ${user.user.username}, enjoy using LIA`;
-                // alertMessage.classList.add('alert-primary');
-                // alertMessage.classList.remove('d-none');
+
                 loggedInUser.push(user.user);
-
-
-                /**
-                 * Getting DOM elements
-                 */
-                const send_btn = document.querySelector('.send_btn');
-                const textMessage = document.querySelector('.textMessage');
-                const msg_card_body = document.querySelector('.msg_card_body');
-                const sendArrow = document.querySelector('.sendArrow');
-                const logOut = document.querySelector('.logOut');
-                const loggedUser = document.querySelector('.loggedUser');
-                const allLoggedIn = document.querySelector('.allLoggedIn');
-                const contacts_card = document.querySelector('.contacts_card');
-                const closeContact_Card = document.querySelector('.closeContact_Card');
-                const chatRoom = document.querySelector('.chatRoom');
-                const action_menu = document.querySelector('.action_menu');
-                let typing = document.querySelector('.typing');
-                const body = document.querySelector('body');
                 loggedUser.classList.add('text-capitalize');
                 loggedUser.innerHTML = `<strong class="text-warning">${user.user.username}</strong>`;
+
+
 
 
 
@@ -61,7 +98,15 @@ $(document).ready(function () {
                 let counter = 0;
                 let counter2 = 0;
 
-                chatRoom.addEventListener('load', () => {
+
+
+                // check for Navigation Timing API support
+                if (window.performance) {
+                    console.info("window.performance works fine on this browser");
+                }
+                if (performance.navigation.type == 1) {
+
+
                     $.get(allMessagesUrl, (messages, error) => {
 
                         if (messages != null) {
@@ -95,7 +140,13 @@ $(document).ready(function () {
 
                     });
 
-                });
+
+
+                    console.info("This page is reloaded");
+                } else {
+                    console.info("This page is not reloaded");
+                }
+
 
                 allLoggedIn.addEventListener('click', () => {
                     contacts_card.style.display = 'block';
@@ -103,13 +154,14 @@ $(document).ready(function () {
                 closeContact_Card.addEventListener('click', () => {
                     contacts_card.style.display = 'none';
                 });
-                // body.addEventListener('click', () => {
-                //     action_menu.style.display = "none";
-                // });
+
+
 
                 //Socket.io client
                 const socket = io()
 
+
+                //ACTION BAR MENU
                 $('.openMenuBtn').click(function () {
                     $('.openMenu').toggle();
                 });
@@ -118,7 +170,7 @@ $(document).ready(function () {
                     $('.toggleUsersMenu').toggle();
                 });
 
-
+                // All users
                 const allUsers = document.querySelector('.contacts');
                 $.get(usersUrl, (users, error) => {
                     let countA = 0;
@@ -133,12 +185,12 @@ $(document).ready(function () {
                             if (user.username == loggedInUser[0].username) {
                                 let lastSeenAt = document.querySelector('.lastSeenAt' + countB);
                                 socket.on('typing', (data) => {
-                                    // const username = document.querySelector('.username' + countA);
-                                    // username.innerHTML = loggedInUser[0].username;
+
                                     lastSeenAt.innerHTML = `<p><em> ${data} is typing </em></p>`;
                                     typing.classList.remove('text-capitalize');
                                     typing.innerHTML = `<p class="text-warning"><em> ${data} is typing </em></p>`;
                                 });
+
                             }
                             countB++;
                         }
@@ -234,8 +286,6 @@ $(document).ready(function () {
                 });
                 //End Event listener for typing event
 
-
-
             } else {
                 window.location = '../../index.html';
             }
@@ -251,8 +301,8 @@ $(document).ready(function () {
 
 function createSentMessageContainer(count) {
     /**
-       * Dynamically creating message fields
-       */
+     * Dynamically creating message fields
+     */
     let sentMessageParentContainer = document.createElement('div');
     let sentMessageDiv = document.createElement('div');
     let sentMessageContainer = document.createElement('div');
@@ -287,6 +337,7 @@ function createSentMessageContainer(count) {
     sentMessageContainer.appendChild(imageDiv);
     sentMessageContainer.appendChild(sentMessageDiv);
     sentMessageParentContainer.appendChild(sentMessageContainer);
+    sentMessageParentContainer.classList.add('messageContainerClass');
 
 
 
@@ -298,8 +349,8 @@ function createSentMessageContainer(count) {
 function createReceivedMessageContainer(count) {
 
     /**
-       * Dynamically creating message fields
-       */
+     * Dynamically creating message fields
+     */
     let receivedMessageParentContainer = document.createElement('div');
     let receivedMessageDiv = document.createElement('div');
     let receivedMessageContainer = document.createElement('div');
@@ -335,6 +386,7 @@ function createReceivedMessageContainer(count) {
     receivedMessageContainer.appendChild(receivedImageDiv);
     receivedMessageContainer.appendChild(receivedMessageDiv);
     receivedMessageParentContainer.appendChild(receivedMessageContainer);
+    receivedMessageParentContainer.classList.add('messageContainerClass');
 
     return receivedMessageParentContainer;
 

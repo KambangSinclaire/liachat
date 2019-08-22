@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>User Login</title>
+    <title>User Registeration</title>
 
     <!-- Material Design for Bootstrap fonts and icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
@@ -44,7 +44,7 @@
                 <!-- Grid column -->
                 <div class="mb-4">
                     <div class="card indigo form-white">
-                        <form action="/liachat.api/user/registerUser" method="post" enctype="multipart/form-data">
+                        <form>
                             <div class="card-body">
                                 <h3 class="text-center white-text py-3"><i class="fa fa-user"></i> User Registeration
                                 </h3>
@@ -54,18 +54,21 @@
                                     <input type="text" id="defaultForm-email1" name="username"
                                         class="form-control username">
                                     <label for="defaultForm-email1">Username</label>
+                                    <p class="usernameError"></p>
                                 </div>
 
                                 <div class="md-form">
                                     <i class="fa fa-envelope prefix white-text"></i>
                                     <input type="email" id="defaultForm-email2" name="email" class="form-control email">
                                     <label for="defaultForm-email2">Email</label>
+                                    <p class="emailError"></p>
                                 </div>
 
                                 <div class="md-form">
                                     <i class="fa fas fa-phone prefix white-text"></i>
                                     <input type="tel" id="defaultForm-pass1" name="phone" class="form-control phone">
                                     <label for="defaultForm-pass1">Phone</label>
+                                    <p class="phoneError"></p>
                                 </div>
 
                                 <div class="md-form">

@@ -28,6 +28,22 @@ html {
     overflow-y: auto;
 }
 
+.msg_card_body::-webkit-scrollbar {
+    width: 0 !important
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.msg_card_body {
+    overflow: -moz-scrollbars-none;
+}
+
+.msg_card_body {
+    -ms-overflow-style: none;
+}
+
 .card-header {
     border-radius: 15px 15px 0 0 !important;
     border-bottom: 0 !important;

@@ -65,6 +65,7 @@ serverSocket.on('connection', (socket) => {
     socket.on('typing', (user) => {
         socket.broadcast.emit('typing', user);
     });
+
 });
 // Socket IO Implementation ends here
 
