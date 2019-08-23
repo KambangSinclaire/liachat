@@ -215,7 +215,7 @@ $(document).ready(function () {
                     sender.innerHTML = `<em class="text-secondary text-italic">@${data.sender}</em>`
                     receivedMessage.textContent += `${data.message}`;
                     receivedMessage.appendChild(sender);
-                    receivedMessage.addEventListener('mouseenter', () => {
+                    receivedMessage.addEventListener("mouseenter", () => {
                         if (notificationBadge.innerHTML != '') {
                             notificationBadge.innerHTML = --notify;
                         }
