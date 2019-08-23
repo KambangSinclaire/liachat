@@ -20,7 +20,7 @@ $(document).ready(function () {
     const action_menu = document.querySelector('.action_menu');
     let typing = document.querySelector('.typing');
     const body = document.querySelector('body');
-
+    const notificationBadge = document.querySelector('.notificationBadge');
 
 
 
@@ -35,40 +35,6 @@ $(document).ready(function () {
 
 
 
-    body.onload = function () {
-        $.get(allMessagesUrl, (messages, error) => {
-
-            if (messages != null) {
-
-                messages.forEach((message) => {
-
-                    if (message.isSent) {
-                        // Sent messages here
-                        let messageContainer = createSentMessageContainer(counter);
-                        msg_card_body.append(messageContainer);
-                        let sentMessage = document.querySelector('.sentMessage' + counter);
-                        sentMessage.textContent = message.message;
-                        console.log(message);
-                        console.log(message.isSent);
-                        counter++;
-
-                    } else {
-                        // Received messages here
-                        let messageContainer = createReceivedMessageContainer(counter2);
-                        msg_card_body.appendChild(messageContainer);
-                        let receivedMessage = document.querySelector('.receivedMessage' + counter2);
-                        let sender = document.createElement('p');
-                        sender.innerHTML = `<em class="text-secondary text-italic">@${message.author}</em>`
-                        receivedMessage.textContent += `${message.message}`;
-                        receivedMessage.appendChild(sender);
-                        counter2++;
-                    }
-                })
-            }
-
-
-        });
-    }
 
 
     const alertMessage = document.querySelector('.alert');
@@ -84,6 +50,10 @@ $(document).ready(function () {
 
     if (userid != null) {
         $.post(checkLogInUrl, { userId: userid }, (user, error) => {
+            //These counters are...
+            let counter = 0;
+            let counter2 = 0;
+
             if (user.msg) {
 
                 loggedInUser.push(user.user);
@@ -91,26 +61,12 @@ $(document).ready(function () {
                 loggedUser.innerHTML = `<strong class="text-warning">${user.user.username}</strong>`;
 
 
-
-
-
-                //These counters are...
-                let counter = 0;
-                let counter2 = 0;
-
-
-
-                // check for Navigation Timing API support
-                if (window.performance) {
-                    console.info("window.performance works fine on this browser");
-                }
-                if (performance.navigation.type == 1) {
-
-
+                body.onload = function () {
                     $.get(allMessagesUrl, (messages, error) => {
 
                         if (messages != null) {
-
+                            // let counter = 0;
+                            // let counter2 = 0;
                             messages.forEach((message) => {
 
                                 if (message.isSent) {
@@ -119,8 +75,8 @@ $(document).ready(function () {
                                     msg_card_body.append(messageContainer);
                                     let sentMessage = document.querySelector('.sentMessage' + counter);
                                     sentMessage.textContent = message.message;
-                                    console.log(message);
-                                    console.log(message.isSent);
+                                    // console.log(message);
+                                    // console.log(message.isSent);
                                     counter++;
 
                                 } else {
@@ -139,13 +95,60 @@ $(document).ready(function () {
 
 
                     });
-
-
-
-                    console.info("This page is reloaded");
-                } else {
-                    console.info("This page is not reloaded");
                 }
+
+
+
+
+
+
+
+                // // check for Navigation Timing API support
+                // if (window.performance) {
+                //     console.info("window.performance works fine on this browser");
+                // }
+                // if (performance.navigation.type == 1) {
+
+
+                //     $.get(allMessagesUrl, (messages, error) => {
+
+                //         if (messages != null) {
+
+                //             messages.forEach((message) => {
+
+                //                 if (message.isSent) {
+                //                     // Sent messages here
+                //                     let messageContainer = createSentMessageContainer(counter);
+                //                     msg_card_body.append(messageContainer);
+                //                     let sentMessage = document.querySelector('.sentMessage' + counter);
+                //                     sentMessage.textContent = message.message;
+                //                     // console.log(message);
+                //                     // console.log(message.isSent);
+                //                     counter++;
+
+                //                 } else {
+                //                     // Received messages here
+                //                     let messageContainer = createReceivedMessageContainer(counter2);
+                //                     msg_card_body.appendChild(messageContainer);
+                //                     let receivedMessage = document.querySelector('.receivedMessage' + counter2);
+                //                     let sender = document.createElement('p');
+                //                     sender.innerHTML = `<em class="text-secondary text-italic">@${message.author}</em>`
+                //                     receivedMessage.textContent += `${message.message}`;
+                //                     receivedMessage.appendChild(sender);
+                //                     counter2++;
+                //                 }
+                //             })
+                //         }
+
+
+                //     });
+
+
+
+                //     console.info("This page is reloaded");
+                // } else {
+                //     console.info("This page is not reloaded");
+                // }
 
 
                 allLoggedIn.addEventListener('click', () => {
@@ -201,15 +204,28 @@ $(document).ready(function () {
 
 
                 //Listen for events
+                let notify = 0;
                 socket.on('message', (data) => {
                     typing.innerHTML = `<p class="text-warning"><em> ${data.sender} is online</em></p>`;
                     const messageContainer = createReceivedMessageContainer(counter2);
                     msg_card_body.appendChild(messageContainer);
                     const receivedMessage = document.querySelector('.receivedMessage' + counter2);
                     let sender = document.createElement('p');
+                    notificationBadge.innerHTML = ++notify;
                     sender.innerHTML = `<em class="text-secondary text-italic">@${data.sender}</em>`
                     receivedMessage.textContent += `${data.message}`;
                     receivedMessage.appendChild(sender);
+                    receivedMessage.addEventListener('mouseenter', () => {
+                        if (notificationBadge.innerHTML != '') {
+                            notificationBadge.innerHTML = --notify;
+                        }
+                        if (notificationBadge.innerHTML == '0') {
+                            notificationBadge.innerHTML = ''
+                        }
+
+
+                    });
+
                     counter2++;
                     let receivedMsg = {
                         message: data.message,

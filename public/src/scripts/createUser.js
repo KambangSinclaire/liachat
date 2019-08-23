@@ -3,9 +3,12 @@ $(document).ready(() => {
     const url = 'https://liachat.herokuapp.com/liachat.api/user/registerUser';
     const usersUrl = 'https://liachat.herokuapp.com/liachat.api/users';
 
+    // const usersUrl = 'http://localhost:9000/liachat.api/users';
+
+    // const url = 'http://localhost:9000/liachat.api/user/registerUser';
 
 
-    //Get DOM Elements
+
     const login = document.querySelector('.login');
     const username = document.querySelector('.username');
     const email = document.querySelector('.email');
@@ -13,12 +16,15 @@ $(document).ready(() => {
     const cpassword = document.querySelector('.cpassword');
     const phone = document.querySelector('.phone');
     const alertShow = document.querySelector('.alert');
+    const form = document.querySelector('form');
     const usernameError = document.querySelector('.usernameError');
     const emailError = document.querySelector('.emailError');
     const phoneError = document.querySelector('.phoneError');
-
-    // const profilePicture = document.querySelector('.profilePicture');
+    const passwordError = document.querySelector('.passwordError');
+    const cpasswordError = document.querySelector('.cpasswordError');
     const registerBtn = document.querySelector('.register');
+
+
 
 
 
@@ -27,11 +33,19 @@ $(document).ready(() => {
         window.location = "../../index.html";
     });
 
+    let checker = form.addEventListener('click', () => {
+        console.log("clicked");
+
+    });
+
+
+
 
 
     //Get All registered users
     $.get(usersUrl, (users, error) => {
         if (users != null) {
+
 
 
             $('.username').blur(function () {
@@ -150,12 +164,7 @@ $(document).ready(() => {
 
     });
 
-
-
 });
-
-
-
 
 
 

@@ -1,15 +1,22 @@
 $(document).ready(() => {
 
-    const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
-    const setAuthUrl = 'https://liachat.herokuapp.com/liachat.api/user/setAuth';
-
-
 
     const username = document.querySelector('.username');
     const password = document.querySelector('.password');
     const loginBtn = document.querySelector('.login');
     const register = document.querySelector('.register');
     const alert = document.querySelector('.alert');
+    const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
+    const setAuthUrl = 'https://liachat.herokuapp.com/liachat.api/user/setAuth';
+
+
+
+
+
+    // const url = 'http://localhost:9000/liachat.api/user/login';
+    // const setAuthUrl = 'http://localhost:9000/liachat.api/user/setAuth';
+
+
 
 
 
@@ -48,7 +55,7 @@ $(document).ready(() => {
                             alert.classList.add('alert-danger');
                             alert.classList.remove('d-none');
                         } else {
-                            if (user.password != password.value) {
+                            if (user.password != password.value.toLowerCase()) {
                                 alert.innerHTML = "Login Error. Invalid password";
                                 alert.classList.add('alert-danger');
                                 alert.classList.remove('d-none');

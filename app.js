@@ -65,7 +65,9 @@ serverSocket.on('connection', (socket) => {
     socket.on('typing', (user) => {
         socket.broadcast.emit('typing', user);
     });
-
+    socket.on('online', (user) => {
+        socket.broadcast.emit('online', user);
+    });
 });
 // Socket IO Implementation ends here
 
@@ -74,42 +76,3 @@ serverSocket.on('connection', (socket) => {
 
 
 
-
-
-
-
-
-
-// var express = require('express');
-// var socket = require('socket.io');
-
-// //App Setup
-
-// var app = express();
-
-// var server = app.listen(4000, function () {
-
-//     console.log('listening to requests on port 4000');
-// });
-
-// //Static files
-// app.use(express.static('public'));
-
-
-// // Socket setup
-// var io = socket(server);
-
-// io.on('connection', function (socket) {
-
-//     console.log('made socket connection');
-
-//     //Handle Chat event
-//     socket.on('chat', function (data) {
-//         io.sockets.emit('chat', data);
-//     });
-
-//     //Listen for typing
-//     socket.on('typing', function (data) {
-//         socket.broadcast.emit('typing', data);
-//     });
-// });
