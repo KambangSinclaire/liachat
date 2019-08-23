@@ -7,6 +7,7 @@ $(document).ready(() => {
     const register = document.querySelector('.register');
     const alert = document.querySelector('.alert');
     const url = 'https://liachat.herokuapp.com/liachat.api/user/login';
+    // const authUrl = 'https://liachat.herokuapp.com/liachat.api/user/authlogin';
     const setAuthUrl = 'https://liachat.herokuapp.com/liachat.api/user/setAuth';
 
 
@@ -72,11 +73,21 @@ $(document).ready(() => {
                     localStorage.setItem('authUser', userid);
                     link.href = './src/views/index.chat.html';
                     link.classList.add('alert-link');
-                    link.innerHTML = `<strong>Go back to Chatroom</strong>`
+                    link.innerHTML = `<strong class="gotoChatRoom">Go back to Chatroom</strong>`
                     alert.textContent = "Already logged in here ";
                     alert.classList.add('alert-danger');
                     alert.classList.remove('d-none');
                     alert.appendChild(link);
+
+                    const gotoChatRoom = document.querySelector('.gotoChatRoom');
+                    gotoChatRoom.addEventListener('click', () => {
+                        //login in user
+                        $.post(setAuthUrl, { userId: userid, isLoggedIn: true }, (user, error) => {
+                            const uid = JSON.stringify(user.id);
+                            localStorage.setItem('authUser', uid);
+                            window.location = "./src/views/index.chat.html"
+                        });
+                    });
                 }
 
             }

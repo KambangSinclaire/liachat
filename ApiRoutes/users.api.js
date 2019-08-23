@@ -29,6 +29,8 @@ UserRouter.post('/user/login', (req, res) => {
 });
 
 
+
+
 // Api route for setting a User authenticated
 UserRouter.post('/user/setAuth', (req, res) => {
     authenticateUser = {
